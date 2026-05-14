@@ -17,6 +17,161 @@ function FadeUp({ children, delay = 0 }) {
   );
 }
 
+function Slider({ features }) {
+  const total = features.length;
+  const [index, setIndex] = useState(0);
+  const dragStart = useRef(null);
+  const autoRef = useRef(null);
+  const stripRef = useRef(null);
+
+  const resetAuto = () => {
+    clearInterval(autoRef.current);
+    autoRef.current = setInterval(() => setIndex(p => p + 1), 3000);
+  };
+
+  useEffect(() => { resetAuto(); return () => clearInterval(autoRef.current); }, []);
+
+  const next = () => { setIndex(p => p + 1); resetAuto(); };
+  const prev = () => { setIndex(p => p - 1); resetAuto(); };
+
+  useEffect(() => {
+    if (index >= total * 2) {
+      if (stripRef.current) stripRef.current.style.transition = 'none';
+      setIndex(p => p - total);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (stripRef.current) stripRef.current.style.transition = 'transform .7s cubic-bezier(.4,0,.2,1)';
+      }));
+    }
+    if (index < 0) {
+      if (stripRef.current) stripRef.current.style.transition = 'none';
+      setIndex(p => p + total);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (stripRef.current) stripRef.current.style.transition = 'transform .7s cubic-bezier(.4,0,.2,1)';
+      }));
+    }
+  }, [index, total]);
+
+  const onMouseDown = (e) => { dragStart.current = e.clientX; };
+  const onMouseUp = (e) => {
+    if (dragStart.current === null) return;
+    const diff = dragStart.current - e.clientX;
+    if (diff > 50) next();
+    else if (diff < -50) prev();
+    dragStart.current = null;
+  };
+  const onTouchStart = (e) => { dragStart.current = e.touches[0].clientX; };
+  const onTouchEnd = (e) => {
+    if (dragStart.current === null) return;
+    const diff = dragStart.current - e.changedTouches[0].clientX;
+    if (diff > 40) next();
+    else if (diff < -40) prev();
+    dragStart.current = null;
+  };
+
+  const repeated = [...features, ...features, ...features];
+  const activeIdx = ((index % total) + total) % total;
+
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '520px', overflow: 'hidden', cursor: 'grab', userSelect: 'none' }}
+      onMouseDown={onMouseDown} onMouseUp={onMouseUp}
+      onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      {/* Üst sabit başlık — overlay üzerinde */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 3, textAlign: 'center', padding: '2.5rem 2rem 1.5rem', background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, transparent 100%)' }}>
+        <div style={{ display: 'inline-block', background: 'rgba(11,191,150,0.25)', border: '1px solid rgba(11,191,150,0.5)', borderRadius: '50px', padding: '4px 16px', fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', color: '#fff', backdropFilter: 'blur(8px)', marginBottom: '1rem' }}>
+          ÖZELLİKLER
+        </div>
+        <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.1rem)', fontWeight: 800, color: '#fff', marginBottom: '.4rem' }}>
+          Neden <span style={{ background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Thermomix TM7?</span>
+        </h2>
+        <p style={{ fontSize: '.85rem', color: 'rgba(255,255,255,0.75)' }}>
+          Doğrulanmış teknik özellikler — resmi Vorwerk kaynaklarından
+        </p>
+      </div>    
+      {/* Şerit */}
+      <div ref={stripRef} style={{
+        display: 'flex',
+        width: '100%',
+        height: '100%',
+        transform: `translateX(-${index * 100}%)`,
+        transition: 'transform .7s cubic-bezier(.4,0,.2,1)',
+        willChange: 'transform',
+      }}>
+        {repeated.map((f, i) => (
+          <div key={i} style={{
+            minWidth: '100%',
+            height: '100%',
+            position: 'relative',
+            flexShrink: 0,
+          }}>
+            {/* Arka plan görseli */}
+            {f.img
+              ? <img src={f.img} alt={f.t} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+              : <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,#d0f5e8,#d8d0f8)' }} />
+            }
+            {/* Overlay */}
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)' }} />
+            {/* İçerik */}
+            {/* İçerik — tüm alan */}
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '2.5rem 3rem' }}>
+              {/* Üst: başlık */}
+              <div>
+                <h2 style={{ fontSize: 'clamp(1.4rem,3vw,2rem)', fontWeight: 800, color: '#fff', marginBottom: '.3rem', lineHeight: 1.2 }}>
+                   <span style={{ background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}></span>
+                </h2>
+                <p style={{ fontSize: '.8rem', color: 'rgba(255,255,255,0.65)', letterSpacing: '.3px' }}>
+                  
+                </p>
+              </div>
+
+              {/* Alt: özellik adı ve açıklama */}
+              <div style={{ color: '#fff' }}>
+                <div style={{ display: 'inline-block', background: 'rgba(11,191,150,0.3)', border: '1px solid rgba(11,191,150,0.5)', borderRadius: '50px', padding: '4px 16px', fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', marginBottom: '1rem', backdropFilter: 'blur(8px)' }}>
+                  ÖZELLİK {(i % total) + 1} / {total}
+                </div>
+                <h3 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 800, marginBottom: '0.75rem', lineHeight: 1.2 }}>{f.t}</h3>
+                <p style={{ fontSize: 'clamp(.9rem,2vw,1.1rem)', color: 'rgba(255,255,255,0.85)', lineHeight: 1.8, maxWidth: '560px' }}>{f.d}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Ok butonları */}
+      {[{ dir: 'left', fn: prev, pos: 'left' }, { dir: 'right', fn: next, pos: 'right' }].map(({ dir, fn, pos }) => (
+        <button key={dir} onClick={fn}
+          style={{
+            position: 'absolute', top: '50%', [pos]: '20px',
+            transform: 'translateY(-50%)',
+            width: '48px', height: '48px', borderRadius: '50%',
+            background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.3)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', fontSize: '18px', color: '#fff',
+            transition: 'background .2s', zIndex: 2,
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.28)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.15)'}>
+          {dir === 'left' ? '←' : '→'}
+        </button>
+      ))}
+
+      {/* Noktalar */}
+      <div style={{ position: 'absolute', bottom: '1.25rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', zIndex: 2 }}>
+        {features.map((_, i) => (
+          <button key={i} onClick={() => { setIndex(i); resetAuto(); }}
+            style={{
+              width: i === activeIdx ? '24px' : '8px', height: '8px',
+              borderRadius: '4px',
+              background: i === activeIdx ? '#0bbf96' : 'rgba(255,255,255,0.4)',
+              border: 'none', cursor: 'pointer',
+              transition: 'all .3s ease', padding: 0,
+            }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const G = {
   teal: '#0bbf96', purple: '#7c6af5',
   grad: 'linear-gradient(135deg,#0bbf96,#7c6af5)',
@@ -37,20 +192,20 @@ export default function Home() {
   );
 
   const features = [
-    { e: '🌡️', t: 'Hassas Pişirme', d: '37°C–130°C arası derece derece sıcaklık kontrolü.' },
-    { e: '💨', t: 'Buharda Pişirme', d: 'Vitaminleri koruyarak sağlıklı yemekler pişirin.' },
-    { e: '🔄', t: 'Otomatik Karıştırma', d: '10 farklı hız kademesi ile doğru karışım.' },
-    { e: '📱', t: 'Cookidoo® Tarifleri', d: '80.000+ adım adım tarif cihazınıza gelir.' },
-    { e: '⚖️', t: 'Entegre Terazi', d: 'Gram hassasiyetiyle tartın.' },
-    { e: '⏱️', t: 'Zaman Tasarrufu', d: 'Saatleri dakikalara indirin.' },
+    { e: '🖥️', t: '10" Dokunmatik Ekran', d: 'Akıllı telefon benzeri büyük ekranla tarifleri adım adım takip edin.', img: '/feat1.png' },
+    { e: '🔇', t: 'Sessiz Motor', d: '40–10.700 RPM aralığında, fısıltı kadar sessiz yeni nesil motor.', img: '/feat2.png' },
+    { e: '🍳', t: 'Sabit Pişirme Modu', d: 'Bıçaklar dönmeden balık, et gibi narin malzemeleri 100°C\'ye kadar pişirin.', img: '/feat3.png' },
+    { e: '💨', t: 'Buharda Pişirme', d: '%45 büyütülmüş Varoma ile vitaminleri koruyarak sağlıklı pişirin.', img: '/feat4.png' },
+    { e: '📱', t: 'Cookidoo® 4.0', d: '100.000+ rehberli tarif doğrudan cihazınıza gelir, kişiselleştirilmiş öneriler.', img: '/feat5.png' },
+    { e: '🏆', t: '20+ Mutfak Aleti', d: 'Tek cihaz; blender, terazi, buharlık, mikser ve daha fazlasının yerini alır.', img: '/feat6.png' },
   ];
 
-  const accessories = [
-    { e: '🥣', t: 'Varoma® Buharlık', d: 'Büyük kapasiteli buharda pişirme kabı.', bg: 'linear-gradient(135deg,#d4f0e8,#e0e8ff)' },
-    { e: '🧀', t: 'Kelebek Aksesuarı', d: 'Krema çırpma ve hassas karıştırma için.', bg: 'linear-gradient(135deg,#e0d8ff,#d4f0e8)' },
-    { e: '🍱', t: 'ThermoServer', d: 'Yemeklerinizi saatlerce sıcak tutan kap.', bg: 'linear-gradient(135deg,#d4f0e8,#e0d8ff)' },
-    { e: '📱', t: 'Cookidoo® Aboneliği', d: 'Aylık güncellenen tarifler ve rehberlik.', bg: 'linear-gradient(135deg,#e0d8ff,#d4f0e8)' },
-  ];
+const accessories = [
+  { img: '/acc1.png', t: 'Varoma® Buharlık', d: 'Büyük kapasiteli buharda pişirme kabı.', bg: 'linear-gradient(135deg,#d4f0e8,#e0e8ff)' },
+  { img: '/acc2.png', t: 'Kelebek Aksesuarı', d: 'Krema çırpma ve hassas karıştırma için.', bg: 'linear-gradient(135deg,#e0d8ff,#d4f0e8)' },
+  { img: '/acc3.png', t: 'ThermoServer', d: 'Yemeklerinizi saatlerce sıcak tutan kap.', bg: 'linear-gradient(135deg,#d4f0e8,#e0d8ff)' },
+  { img: '/acc4.png', t: 'Cookidoo® Aboneliği', d: 'Aylık güncellenen tarifler ve rehberlik.', bg: 'linear-gradient(135deg,#e0d8ff,#d4f0e8)' },
+];
 
   const btnHover = (e) => { e.currentTarget.style.transform = 'scale(1.06)'; e.currentTarget.style.opacity = '.9'; };
   const btnLeave = (e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.opacity = '1'; };
@@ -89,8 +244,8 @@ export default function Home() {
       <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, background: 'rgba(232,244,238,0.92)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(11,191,150,0.15)', padding: '.9rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ fontSize: '1.05rem', fontWeight: 800, background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>🍃 Akıllı Mutfak</div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          {['Özellikler', 'Aksesuarlar', 'Hakkında'].map((item, i) => (
-            <a key={i} href={`#${['ozellikler', 'aksesuarlar', 'hakkinda'][i]}`}
+          {['Özellikler', 'Aksesuarlar', 'Hakkında', 'İletişim'].map((item, i) => (
+            <a key={i} href={`#${['ozellikler', 'aksesuarlar', 'hakkinda', 'iletisim'][i]}`}
               style={{ color: '#374151', textDecoration: 'none', fontSize: '.85rem', fontWeight: 500, marginLeft: '1.5rem' }}>
               {item}
             </a>
@@ -146,26 +301,8 @@ export default function Home() {
       </section>
 
       {/* ÖZELLİKLER */}
-      <section id="ozellikler" style={{ padding: '5rem 2rem', maxWidth: '1100px', margin: '0 auto' }}>
-        <FadeUp>
-          <div style={{ textAlign: 'center' }}>{chip('ÖZELLİKLER')}</div>
-          <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.1rem)', fontWeight: 800, color: '#111827', textAlign: 'center', marginBottom: '.4rem' }}>
-            Neden <span style={{ background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Thermomix TM7?</span>
-          </h2>
-          <p style={{ textAlign: 'center', color: '#6b7280', fontSize: '.9rem', marginBottom: '3rem' }}>22&apos;den fazla farklı işlevi tek bir cihazda birleştiriyor</p>
-        </FadeUp>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(185px,1fr))', gap: '1.25rem' }}>
-          {features.map((f, i) => (
-            <FadeUp key={i} delay={i * 0.07}>
-              <div onMouseEnter={cardHover} onMouseLeave={cardLeave}
-                style={{ background: G.glass, border: '1.5px solid rgba(11,191,150,0.15)', borderRadius: '20px', padding: '1.5rem', textAlign: 'center', backdropFilter: 'blur(12px)', boxShadow: G.shadow, transition: 'transform .25s,border-color .25s,box-shadow .25s', height: '100%' }}>
-                <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: G.gradSoft, border: '1.5px solid rgba(11,191,150,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', margin: '0 auto 1rem' }}>{f.e}</div>
-                <h3 style={{ fontSize: '.9rem', fontWeight: 700, color: '#111827', marginBottom: '.35rem' }}>{f.t}</h3>
-                <p style={{ fontSize: '.78rem', color: '#5a6270', lineHeight: 1.6 }}>{f.d}</p>
-              </div>
-            </FadeUp>
-          ))}
-        </div>
+      <section id="ozellikler" style={{ width: '100%' }}>
+        <Slider features={features} />
       </section>
 
       {/* HAKKINDA */}
@@ -174,7 +311,7 @@ export default function Home() {
           <FadeUp>
             <div onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
               style={{ width: '100%', aspectRatio: '1', borderRadius: '28px', overflow: 'hidden', border: '1.5px solid rgba(11,191,150,0.2)', boxShadow: '0 20px 60px rgba(124,106,245,0.12)', transition: 'transform .4s' }}>
-              <img src="/img1.png" alt="Thermomix TM7" style={{ width: '100%', height: '100%', objectFit: 'cover', background: '#111' }} />
+              <img src="/img3.png" alt="Thermomix TM7" style={{ width: '100%', height: '100%', objectFit: 'cover', background: '#111' }} />
             </div>
           </FadeUp>
           <FadeUp delay={0.15}>
@@ -210,7 +347,12 @@ export default function Home() {
             <FadeUp key={i} delay={i * 0.08}>
               <div onMouseEnter={accHover} onMouseLeave={accLeave}
                 style={{ background: G.glass, border: '1.5px solid rgba(124,106,245,0.15)', borderRadius: '20px', overflow: 'hidden', backdropFilter: 'blur(12px)', boxShadow: '0 8px 32px rgba(124,106,245,0.07)', transition: 'transform .25s,border-color .25s,box-shadow .25s', height: '100%' }}>
-                <div style={{ height: '130px', background: a.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px' }}>{a.e}</div>
+                <div style={{ height: '160px', overflow: 'hidden' }}>
+                  {a.img
+                    ? <img src={a.img} alt={a.t} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : <div style={{ width: '100%', height: '100%', background: a.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', color: '#9ca3af', fontWeight: 600 }}>📷 {a.t}</div>
+                  }
+                </div>
                 <div style={{ padding: '.9rem 1.1rem' }}>
                   <h3 style={{ fontSize: '.88rem', fontWeight: 700, color: '#111827', marginBottom: '.2rem' }}>{a.t}</h3>
                   <p style={{ fontSize: '.76rem', color: '#5a6270', lineHeight: 1.6 }}>{a.d}</p>
@@ -227,13 +369,22 @@ export default function Home() {
           <h2 style={{ color: '#fff', fontSize: '1.8rem', fontWeight: 800, marginBottom: '.5rem' }}>Bizi Takip Edin</h2>
           <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '2rem', fontSize: '.9rem' }}>Tarifler, ipuçları ve kampanyalar için bize katılın</p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            {[{ label: 'YouTube', href: 'https://youtube.com', e: '▶️' }, { label: 'Instagram', href: 'https://instagram.com', e: '📸' }, { label: 'WhatsApp', href: 'https://whatsapp.com', e: '💬' }].map((s, i) => (
+            {[
+              { label: 'YouTube', href: 'https://youtube.com', img: '/social-yt.png' },
+              { label: 'Instagram', href: 'https://instagram.com', img: '/social-ig.png' },
+              { label: 'WhatsApp', href: 'https://whatsapp.com', img: '/social-wa.png' },
+            ].map((s, i) => (
               <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
-                style={{ background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.25)', borderRadius: '18px', padding: '1.25rem 1.75rem', color: '#fff', textDecoration: 'none', minWidth: '120px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.6rem', backdropFilter: 'blur(8px)', transition: 'background .2s,transform .2s' }}
+                style={{ background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.25)', borderRadius: '18px', overflow: 'hidden', color: '#fff', textDecoration: 'none', minWidth: '160px', display: 'flex', flexDirection: 'column', alignItems: 'center', backdropFilter: 'blur(8px)', transition: 'background .2s,transform .2s' }}
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.25)'; e.currentTarget.style.transform = 'translateY(-5px)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-                <span style={{ fontSize: '28px' }}>{s.e}</span>
-                <span style={{ fontSize: '.8rem', fontWeight: 600 }}>{s.label}</span>
+                <div style={{ width: '100%', height: '100px', overflow: 'hidden' }}>
+                  {s.img
+                    ? <img src={s.img} alt={s.label} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} />
+                    : <div style={{ width: '100%', height: '100%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', color: 'rgba(255,255,255,0.5)' }}>📷</div>
+                  }
+                </div>
+                <div style={{ padding: '0.75rem', fontWeight: 600, fontSize: '.85rem' }}>{s.label}</div>
               </a>
             ))}
           </div>
@@ -241,7 +392,7 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section style={{ padding: '5rem 2rem', textAlign: 'center', background: sectionBg }}>
+      <section id="iletisim" style={{ padding: '5rem 2rem', textAlign: 'center', background: sectionBg }}>
         <FadeUp>
           <h2 style={{ fontSize: '2.1rem', fontWeight: 800, color: '#111827', marginBottom: '1rem' }}>
             Hemen <span style={{ background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Sipariş Verin</span>
