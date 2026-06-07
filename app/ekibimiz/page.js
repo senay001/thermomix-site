@@ -8,7 +8,7 @@ const G = {
   teal: '#1e7b6e',
 };
 
-export default function SiparisPage() {
+export default function EkibimizPage() {
   const [form, setForm] = useState({ ad: '', soyad: '', eposta: '', gsm: '', sehir: '' });
   const [durum, setDurum] = useState('');
   const [yukleniyor, setYukleniyor] = useState(false);
@@ -21,10 +21,10 @@ export default function SiparisPage() {
     setYukleniyor(true);
     setDurum('');
     try {
-      const res = await fetch('/api/siparis', {
+      const res = await fetch('/api/basvuru', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, urun: 'Thermomix TM7', adres: '-', notlar: '' }),
+        body: JSON.stringify({ ...form, urun: 'Ekibimize Katılım Başvurusu', adres: '-', notlar: '' }),
       });
       const data = await res.json();
       if (data.success) {
@@ -47,28 +47,36 @@ export default function SiparisPage() {
 
   return (
     <main style={{ minHeight: '100vh', background: 'linear-gradient(160deg,#e8fdf5,#f0fdf4)', fontFamily: "'Segoe UI',sans-serif", padding: '2rem 1rem' }}>
+
+      {/* Nav */}
       <div style={{ maxWidth: '640px', margin: '0 auto 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#374151', textDecoration: 'none', fontSize: '.85rem', fontWeight: 600 }}>← Ana Sayfa</Link>
-        <img src="/logs_new.png" alt="thermosiparis.com" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+          <img src="/logs_new.png" alt="thermosiparis.com" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+        </Link>
       </div>
 
       <div style={{ maxWidth: '640px', margin: '0 auto' }}>
+
+        {/* Başlık kartı */}
         <div style={{ background: '#fff', border: '1.5px solid rgba(30,123,110,0.2)', borderRadius: '24px', padding: '2rem', marginBottom: '1.25rem', boxShadow: '0 8px 32px rgba(30,123,110,0.08)', textAlign: 'center' }}>
-          <div style={{ display: 'inline-block', background: G.gradSoft, color: G.teal, fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', padding: '5px 16px', borderRadius: '50px', marginBottom: '.75rem' }}>SİPARİŞ FORMU</div>
+          <div style={{ display: 'inline-block', background: G.gradSoft, color: G.teal, fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', padding: '5px 16px', borderRadius: '50px', marginBottom: '.75rem' }}>KARİYER</div>
           <h1 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#111827', marginBottom: '.5rem' }}>
-            Thermomix <span style={{ background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>TM7</span>
+            Ekibimize <span style={{ background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Katılın</span>
           </h1>
-          <p style={{ color: '#6b7280', fontSize: '.85rem', lineHeight: 1.7 }}>Formu doldurun, uzman danışmanımız en kısa sürede sizi arasın.</p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '1.25rem' }}>
+          <p style={{ color: '#6b7280', fontSize: '.85rem', lineHeight: 1.7 }}>Thermomix danışmanı olarak çalışmak ister misiniz? Bilgilerinizi bırakın, sizi arayalım.</p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
             
           </div>
         </div>
 
+        {/* Form kartı */}
         <div style={{ background: '#fff', border: '1.5px solid rgba(30,123,110,0.2)', borderRadius: '24px', padding: '2rem', boxShadow: '0 8px 32px rgba(30,123,110,0.08)' }}>
+
           {durum === 'success' && (
             <div style={{ background: 'rgba(30,123,110,0.08)', border: '1.5px solid rgba(30,123,110,0.3)', borderRadius: '16px', padding: '1.25rem', marginBottom: '1.5rem', textAlign: 'center' }}>
               <div style={{ fontSize: '2rem', marginBottom: '.5rem' }}>🎉</div>
-              <div style={{ fontWeight: 700, color: '#065f46', marginBottom: '.25rem' }}>Siparişiniz Alındı!</div>
+              <div style={{ fontWeight: 700, color: '#065f46', marginBottom: '.25rem' }}>Başvurunuz Alındı!</div>
               <div style={{ fontSize: '.85rem', color: '#374151' }}>En kısa sürede uzmanımız sizi arayacak.</div>
             </div>
           )}
@@ -88,7 +96,11 @@ export default function SiparisPage() {
                 </div>
               ))}
             </div>
-            {[{ name: 'eposta', label: 'E-posta *', type: 'email' }, { name: 'gsm', label: 'GSM *', type: 'tel' }, { name: 'sehir', label: 'Şehir *', type: 'text' }].map(f => (
+            {[
+              { name: 'eposta', label: 'E-posta *', type: 'email' },
+              { name: 'gsm', label: 'GSM *', type: 'tel' },
+              { name: 'sehir', label: 'Şehir *', type: 'text' },
+            ].map(f => (
               <div key={f.name} style={{ marginBottom: '1rem' }}>
                 <label style={labelStyle}>{f.label}</label>
                 <input name={f.name} type={f.type} value={form[f.name]} onChange={handleChange} required onFocus={() => setFocused(f.name)} onBlur={() => setFocused('')} style={inputStyle(f.name)} />
@@ -99,9 +111,9 @@ export default function SiparisPage() {
               style={{ width: '100%', background: yukleniyor ? '#9ca3af' : G.grad, color: '#fff', padding: '14px', borderRadius: '14px', fontWeight: 700, fontSize: '1rem', border: 'none', cursor: yukleniyor ? 'not-allowed' : 'pointer', transition: 'opacity .2s, transform .15s', boxShadow: '0 4px 20px rgba(30,123,110,0.25)', marginTop: '.5rem' }}
               onMouseEnter={e => { if (!yukleniyor) { e.currentTarget.style.opacity = '.9'; e.currentTarget.style.transform = 'scale(1.02)'; } }}
               onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'scale(1)'; }}>
-              {yukleniyor ? '⏳ Gönderiliyor...' : '🛒 Sipariş Ver'}
+              {yukleniyor ? '⏳ Gönderiliyor...' : '🤝 Başvur'}
             </button>
-            <p style={{ textAlign: 'center', fontSize: '.75rem', color: '#9ca3af', marginTop: '1rem' }}>Bilgileriniz güvenle saklanır ve yalnızca sipariş için kullanılır.</p>
+            <p style={{ textAlign: 'center', fontSize: '.75rem', color: '#9ca3af', marginTop: '1rem' }}>Bilgileriniz güvenle saklanır ve yalnızca işe alım için kullanılır.</p>
           </form>
         </div>
       </div>

@@ -51,7 +51,7 @@ export async function POST(request) {
     // Sana bildirim maili
     await resend.emails.send({
       from: 'onboarding@resend.dev',
-      to: 'senin@eposta.com',
+      to: 'safaksekin0@gmail.com',
       subject: `Yeni Sipariş: ${urun}`,
       html: `
         <h2>Yeni sipariş geldi!</h2>
