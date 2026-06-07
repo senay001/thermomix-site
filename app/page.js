@@ -370,8 +370,14 @@ export default function Home() {
 
         {/* Mobil menü */}
         {menuAcik && (
-          <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'rgba(255,255,255,0.98)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(30,123,110,0.12)', padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
-            {['Özellikler', 'Aksesuarlar', 'Hakkında', 'İletişim'].map((item, i) => (
+          <div style={{ 
+            position: 'absolute', top: '100%', left: 0, right: 0, 
+            background: 'rgba(255,255,255,0.98)', backdropFilter: 'blur(16px)', 
+            borderBottom: '1px solid rgba(30,123,110,0.12)', 
+            padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '.75rem',
+            animation: 'menuAc .25s ease',
+          }}>
+        {['Özellikler', 'Aksesuarlar', 'Hakkında', 'İletişim'].map((item, i) => (
               <a key={i} href={`#${['ozellikler','aksesuarlar','hakkinda','iletisim'][i]}`}
                 onClick={() => setMenuAcik(false)}
                 style={{ color: '#374151', textDecoration: 'none', fontSize: '1rem', fontWeight: 500, padding: '8px 0', borderBottom: '1px solid rgba(30,123,110,0.08)' }}>
@@ -390,6 +396,7 @@ export default function Home() {
         )}
 
         <style>{`
+          @keyframes menuAc { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
           @media (max-width: 768px) {
             .desktop-nav { display: none !important; }
             .hamburger-btn { display: flex !important; }
@@ -516,18 +523,28 @@ export default function Home() {
           <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '2rem', fontSize: '.9rem' }}>Tarifler, ipuçları ve kampanyalar için bize katılın</p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             {[
-              { label: 'YouTube', href: 'https://youtube.com', img: '/yt.png' },
-              { label: 'Instagram', href: 'https://instagram.com', img: '/in.png' },
-              { label: 'WhatsApp', href: 'https://whatsapp.com', img: '/wp.png' },
+              { label: 'YouTube', href: 'https://youtube.com', img: '/social-yt.png' },
+              { label: 'Instagram', href: 'https://instagram.com', img: '/social-ig.png' },
+              { label: 'WhatsApp', href: 'https://whatsapp.com', img: '/social-wa.png' },
             ].map((s, i) => (
               <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
-                style={{ background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.25)', borderRadius: '18px', overflow: 'hidden', color: '#fff', textDecoration: 'none', minWidth: 'clamp(80px,15vw,120px)', display: 'flex', flexDirection: 'column', alignItems: 'center', backdropFilter: 'blur(8px)', transition: 'background .2s,transform .2s', height: 'clamp(60px,10vw,80px)' }}
+                style={{ 
+                  background: 'rgba(255,255,255,0.15)', 
+                  border: '1.5px solid rgba(255,255,255,0.25)', 
+                  borderRadius: '16px', overflow: 'hidden', color: '#fff', 
+                  textDecoration: 'none', width: '100px', height: '100px',
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', 
+                  justifyContent: 'center', gap: '.5rem',
+                  backdropFilter: 'blur(8px)', transition: 'background .2s,transform .2s',
+                  flexShrink: 0,
+                }}
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.25)'; e.currentTarget.style.transform = 'translateY(-5px)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-                <div style={{ width: '100%', height: 'clamp(70px,12vw,100px)', overflow: 'hidden' }}>
-                  {s.img ? <img src={s.img} alt={s.label} style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.85 }} /> : <div style={{ width: '100%', height: '100%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>📷</div>}
-                </div>
-                <div style={{ padding: 'clamp(.5rem,1.5vw,.75rem)', fontWeight: 600, fontSize: 'clamp(.75rem,2vw,.85rem)' }}>{s.label}</div>
+                {s.img
+                  ? <img src={s.img} alt={s.label} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }} />
+                  : <div style={{ width: '48px', height: '48px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px' }} />
+                }
+                <span style={{ fontSize: '.75rem', fontWeight: 600 }}>{s.label}</span>
               </a>
             ))}
           </div>
