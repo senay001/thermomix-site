@@ -203,7 +203,13 @@ function BentoGrid() {
           </h2>
         </div>
       </FadeUp>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}>
+      <style>{`
+        @media (max-width: 640px) {
+          .bento-grid { grid-template-columns: 1fr !important; }
+          .bento-grid > div:first-child { grid-column: auto !important; grid-row: auto !important; }
+        }
+      `}</style>
+      <div className="bento-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}>
         <FadeUp>
           <div onMouseEnter={hover} onMouseLeave={leave} style={{ transition: 'transform .25s,box-shadow .25s', gridColumn: '1/2', gridRow: '1/3', background: G.grad, borderRadius: '24px', padding: '2rem', color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', minHeight: '320px', position: 'relative', overflow: 'hidden', cursor: 'default' }}>
             <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '160px', height: '160px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }} />
@@ -273,6 +279,7 @@ function BentoGrid() {
 }
 
 export default function Home() {
+  const [menuAcik, setMenuAcik] = useState(false);
   const [popup, setPopup] = useState(true);
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -328,15 +335,14 @@ export default function Home() {
       {/* NAV */}
       <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(30,123,110,0.12)', padding: '.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-          <img src="/logs_new.png" alt="thermosiparis.com" style={{ height: '40px', objectFit: 'contain' }} />
+          <img src="/logs_new.png" alt="thermomutfaksefi.com" style={{ height: '40px', objectFit: 'contain' }} />
           <span style={{ fontSize: '.95rem', fontWeight: 800, background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>thermomutfaksefi.com</span>
         </Link>
 
-        {/* Masaüstü linkler */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '.25rem', flexWrap: 'nowrap' }}
-          className="desktop-nav">
+        {/* Masaüstü */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '.25rem' }} className="desktop-nav">
           {['Özellikler', 'Aksesuarlar', 'Hakkında', 'İletişim'].map((item, i) => (
-            <a key={i} href={`#${['ozellikler', 'aksesuarlar', 'hakkinda', 'iletisim'][i]}`}
+            <a key={i} href={`#${['ozellikler','aksesuarlar','hakkinda','iletisim'][i]}`}
               style={{ color: '#374151', textDecoration: 'none', fontSize: '.82rem', fontWeight: 500, padding: '4px 8px', whiteSpace: 'nowrap' }}>
               {item}
             </a>
@@ -348,15 +354,45 @@ export default function Home() {
             Ekibimize Katılın
           </Link>
           <Link href="/siparis"
-            style={{ background: G.grad, color: '#fff', padding: '8px 16px', borderRadius: '50px', fontSize: '.82rem', fontWeight: 700, textDecoration: 'none', marginLeft: '4px', transition: 'transform .2s,opacity .2s', whiteSpace: 'nowrap' }}
+            style={{ background: G.grad, color: '#fff', padding: '8px 16px', borderRadius: '50px', fontSize: '.82rem', fontWeight: 700, textDecoration: 'none', marginLeft: '4px', whiteSpace: 'nowrap' }}
             onMouseEnter={btnHover} onMouseLeave={btnLeave}>
             Sipariş Ver
           </Link>
         </div>
 
+        {/* Hamburger butonu — sadece mobilde */}
+        <button className="hamburger-btn" onClick={() => setMenuAcik(!menuAcik)}
+          style={{ display: 'none', flexDirection: 'column', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
+          <span style={{ width: '24px', height: '2px', background: menuAcik ? 'transparent' : G.teal, transition: 'all .3s', transform: menuAcik ? 'rotate(45deg) translate(5px,5px)' : 'none', display: 'block' }} />
+          <span style={{ width: '24px', height: '2px', background: G.teal, transition: 'all .3s', transform: menuAcik ? 'rotate(-45deg)' : 'none', display: 'block' }} />
+          <span style={{ width: '24px', height: '2px', background: menuAcik ? 'transparent' : G.teal, transition: 'all .3s', display: 'block' }} />
+        </button>
+
+        {/* Mobil menü */}
+        {menuAcik && (
+          <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'rgba(255,255,255,0.98)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(30,123,110,0.12)', padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
+            {['Özellikler', 'Aksesuarlar', 'Hakkında', 'İletişim'].map((item, i) => (
+              <a key={i} href={`#${['ozellikler','aksesuarlar','hakkinda','iletisim'][i]}`}
+                onClick={() => setMenuAcik(false)}
+                style={{ color: '#374151', textDecoration: 'none', fontSize: '1rem', fontWeight: 500, padding: '8px 0', borderBottom: '1px solid rgba(30,123,110,0.08)' }}>
+                {item}
+              </a>
+            ))}
+            <Link href="/ekibimiz" onClick={() => setMenuAcik(false)}
+              style={{ color: G.teal, textDecoration: 'none', fontSize: '1rem', fontWeight: 700, padding: '8px 0', borderBottom: '1px solid rgba(30,123,110,0.08)' }}>
+              Ekibimize Katılın
+            </Link>
+            <Link href="/siparis" onClick={() => setMenuAcik(false)}
+              style={{ background: G.grad, color: '#fff', padding: '12px', borderRadius: '50px', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', textAlign: 'center', marginTop: '.25rem' }}>
+              Sipariş Ver
+            </Link>
+          </div>
+        )}
+
         <style>{`
           @media (max-width: 768px) {
             .desktop-nav { display: none !important; }
+            .hamburger-btn { display: flex !important; }
           }
         `}</style>
       </nav>
@@ -485,7 +521,7 @@ export default function Home() {
               { label: 'WhatsApp', href: 'https://whatsapp.com', img: '/wp.png' },
             ].map((s, i) => (
               <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
-                style={{ background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.25)', borderRadius: '18px', overflow: 'hidden', color: '#fff', textDecoration: 'none', minWidth: 'clamp(100px,20vw,160px)', display: 'flex', flexDirection: 'column', alignItems: 'center', backdropFilter: 'blur(8px)', transition: 'background .2s,transform .2s' }}
+                style={{ background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.25)', borderRadius: '18px', overflow: 'hidden', color: '#fff', textDecoration: 'none', minWidth: 'clamp(80px,15vw,120px)', display: 'flex', flexDirection: 'column', alignItems: 'center', backdropFilter: 'blur(8px)', transition: 'background .2s,transform .2s', height: 'clamp(60px,10vw,80px)' }}
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.25)'; e.currentTarget.style.transform = 'translateY(-5px)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
                 <div style={{ width: '100%', height: 'clamp(70px,12vw,100px)', overflow: 'hidden' }}>
