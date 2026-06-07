@@ -280,6 +280,7 @@ function BentoGrid() {
 
 export default function Home() {
   const [menuAcik, setMenuAcik] = useState(false);
+  const [menuKapaniyor, setMenuKapaniyor] = useState(false);
   const [popup, setPopup] = useState(true);
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -361,7 +362,14 @@ export default function Home() {
         </div>
 
         {/* Hamburger butonu — sadece mobilde */}
-        <button className="hamburger-btn" onClick={() => setMenuAcik(!menuAcik)}
+        <button className="hamburger-btn" onClick={() => {
+                                                            if (menuAcik) {
+                                                              setMenuKapaniyor(true);
+                                                              setTimeout(() => { setMenuAcik(false); setMenuKapaniyor(false); }, 220);
+                                                            } else {
+                                                              setMenuAcik(true);
+                                                            }
+                                                          }}
           style={{ display: 'none', flexDirection: 'column', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
           <span style={{ width: '24px', height: '2px', background: menuAcik ? 'transparent' : G.teal, transition: 'all .3s', transform: menuAcik ? 'rotate(45deg) translate(5px,5px)' : 'none', display: 'block' }} />
           <span style={{ width: '24px', height: '2px', background: G.teal, transition: 'all .3s', transform: menuAcik ? 'rotate(-45deg)' : 'none', display: 'block' }} />
@@ -375,7 +383,7 @@ export default function Home() {
             background: 'rgba(255,255,255,0.98)', backdropFilter: 'blur(16px)', 
             borderBottom: '1px solid rgba(30,123,110,0.12)', 
             padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '.75rem',
-            animation: 'menuAc .25s ease',
+            animation: menuKapaniyor ? 'menuKapa .22s ease forwards' : 'menuAc .25s ease',
           }}>
         {['Özellikler', 'Aksesuarlar', 'Hakkında', 'İletişim'].map((item, i) => (
               <a key={i} href={`#${['ozellikler','aksesuarlar','hakkinda','iletisim'][i]}`}
@@ -397,6 +405,7 @@ export default function Home() {
 
         <style>{`
           @keyframes menuAc { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+          @keyframes menuKapa { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-8px); } }
           @media (max-width: 768px) {
             .desktop-nav { display: none !important; }
             .hamburger-btn { display: flex !important; }
@@ -523,9 +532,9 @@ export default function Home() {
           <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '2rem', fontSize: '.9rem' }}>Tarifler, ipuçları ve kampanyalar için bize katılın</p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             {[
-              { label: 'YouTube', href: 'https://youtube.com', img: '/social-yt.png' },
-              { label: 'Instagram', href: 'https://instagram.com', img: '/social-ig.png' },
-              { label: 'WhatsApp', href: 'https://whatsapp.com', img: '/social-wa.png' },
+              { label: 'YouTube', href: 'https://youtube.com', img: '/yt.png' },
+              { label: 'Instagram', href: 'https://instagram.com', img: '/in.png' },
+              { label: 'WhatsApp', href: 'https://whatsapp.com', img: '/wp.png' },
             ].map((s, i) => (
               <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
                 style={{ 
