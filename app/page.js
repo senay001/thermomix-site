@@ -326,33 +326,39 @@ export default function Home() {
       )} 
 
       {/* NAV */}
-      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(30,123,110,0.12)', padding: '.75rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        {/* Logo — tıklanabilir, daha büyük */}
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-          <img src="/logs_new.png" alt="thermosiparis.com" style={{ width: '45px', height: '45px', objectFit: 'contain', display: 'block', cursor: 'pointer' }} />
-            <span style={{ fontSize: '1.25rem', fontWeight: 800, background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-.3px', paddingTop: '3px', display: 'inline-block' }}>
-              thermosiparis.com
-            </span>
+      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(30,123,110,0.12)', padding: '.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+          <img src="/logs_new.png" alt="thermosiparis.com" style={{ height: '40px', objectFit: 'contain' }} />
+          <span style={{ fontSize: '.95rem', fontWeight: 800, background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>thermomutfaksefi.com</span>
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '.25rem', flexWrap: 'wrap' }}>
+
+        {/* Masaüstü linkler */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '.25rem', flexWrap: 'nowrap' }}
+          className="desktop-nav">
           {['Özellikler', 'Aksesuarlar', 'Hakkında', 'İletişim'].map((item, i) => (
             <a key={i} href={`#${['ozellikler', 'aksesuarlar', 'hakkinda', 'iletisim'][i]}`}
-              style={{ color: '#374151', textDecoration: 'none', fontSize: '.85rem', fontWeight: 500, padding: '4px 10px' }}>
+              style={{ color: '#374151', textDecoration: 'none', fontSize: '.82rem', fontWeight: 500, padding: '4px 8px', whiteSpace: 'nowrap' }}>
               {item}
             </a>
           ))}
           <Link href="/ekibimiz"
-            style={{ color: G.teal, textDecoration: 'none', fontSize: '.85rem', fontWeight: 700, padding: '6px 14px', border: `1.5px solid ${G.teal}`, borderRadius: '50px', marginLeft: '4px', transition: 'all .2s' }}
+            style={{ color: G.teal, textDecoration: 'none', fontSize: '.82rem', fontWeight: 700, padding: '6px 12px', border: `1.5px solid ${G.teal}`, borderRadius: '50px', marginLeft: '4px', transition: 'all .2s', whiteSpace: 'nowrap' }}
             onMouseEnter={e => { e.currentTarget.style.background = G.teal; e.currentTarget.style.color = '#fff'; }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = G.teal; }}>
             Ekibimize Katılın
           </Link>
           <Link href="/siparis"
-            style={{ background: G.grad, color: '#fff', padding: '8px 20px', borderRadius: '50px', fontSize: '.85rem', fontWeight: 700, textDecoration: 'none', marginLeft: '4px', transition: 'transform .2s,opacity .2s' }}
+            style={{ background: G.grad, color: '#fff', padding: '8px 16px', borderRadius: '50px', fontSize: '.82rem', fontWeight: 700, textDecoration: 'none', marginLeft: '4px', transition: 'transform .2s,opacity .2s', whiteSpace: 'nowrap' }}
             onMouseEnter={btnHover} onMouseLeave={btnLeave}>
             Sipariş Ver
           </Link>
         </div>
+
+        <style>{`
+          @media (max-width: 768px) {
+            .desktop-nav { display: none !important; }
+          }
+        `}</style>
       </nav>
 
       {/* HERO */}
