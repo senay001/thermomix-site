@@ -282,6 +282,7 @@ export default function Home() {
   const [menuAcik, setMenuAcik] = useState(false);
   const [menuKapaniyor, setMenuKapaniyor] = useState(false);
   const [popup, setPopup] = useState(true);
+  const [siparisRehberi, setSiparisRehberi] = useState(false);
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   const chip = (label) => (
@@ -312,6 +313,48 @@ export default function Home() {
   return (
     <main style={{ fontFamily: "'Segoe UI',sans-serif", background: G.bg, color: '#1a1f2e', overflowX: 'hidden', paddingTop: '60px' }}>
 
+      {/* Nasıl Sipariş Verilir — sabit köşe butonu */}
+      <div
+        onClick={() => setSiparisRehberi(true)}
+        style={{ position: 'fixed', bottom: '24px', left: '24px', zIndex: 99, background: '#fff', border: `1.5px solid ${G.teal}`, borderRadius: '16px', padding: '10px 16px', cursor: 'pointer', boxShadow: '0 4px 20px rgba(30,123,110,0.15)', display: 'flex', alignItems: 'center', gap: '8px', transition: 'transform .2s' }}
+        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+        <span style={{ fontSize: '1.2rem' }}>🛒</span>
+        <span style={{ fontSize: '.8rem', fontWeight: 700, color: G.teal, whiteSpace: 'nowrap' }}>Nasıl Sipariş Verilir?</span>
+      </div>
+
+      {/* Sipariş rehberi popup */}
+      {siparisRehberi && (
+        <div onClick={(e) => { if (e.target === e.currentTarget) setSiparisRehberi(false); }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(6px)', padding: '1rem' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '2rem', maxWidth: '480px', width: '100%', position: 'relative', boxShadow: '0 32px 80px rgba(30,123,110,0.2)', maxHeight: '80vh', overflowY: 'auto' }}>
+            <button onClick={() => setSiparisRehberi(false)}
+              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'rgba(0,0,0,0.06)', border: 'none', color: '#555', fontSize: '1rem', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+            <div style={{ display: 'inline-block', background: G.gradSoft, color: G.teal, fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', padding: '5px 16px', borderRadius: '50px', marginBottom: '1rem' }}>SİPARİŞ REHBERİ</div>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#111827', marginBottom: '1.5rem' }}>Nasıl Sipariş Verilir?</h2>
+            {[
+              { no: '1', baslik: 'Formu Doldurun', aciklama: 'Sipariş Ver butonuna tıklayın. Adınızı, soyadınızı, e-posta ve telefon numaranızı girin.' },
+              { no: '2', baslik: 'Uzmanımız Sizi Arasın', aciklama: 'Formunuz bize ulaştıktan sonra uzman danışmanımız en kısa sürede sizi arayacak.' },
+              { no: '3', baslik: 'Ürün Tanıtımı', aciklama: 'Danışmanımız size Thermomix TM7\'yi detaylıca tanıtır, tüm sorularınızı yanıtlar.' },
+              { no: '4', baslik: 'Siparişinizi Verin', aciklama: 'Vade farksız 9 taksit seçeneğiyle siparişinizi kolayca verebilirsiniz.' },
+              { no: '5', baslik: 'Teslimat ve Kurulum', aciklama: 'Ürününüz Türkiye geneline ücretsiz teslim edilir. Uzmanımız kurulum ve eğitim için yanınızda olur.' },
+            ].map((adim, i) => (
+              <div key={i} style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', alignItems: 'flex-start' }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: G.grad, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '1rem', flexShrink: 0 }}>{adim.no}</div>
+                <div>
+                  <div style={{ fontWeight: 700, color: '#111827', marginBottom: '.25rem' }}>{adim.baslik}</div>
+                  <div style={{ fontSize: '.85rem', color: '#6b7280', lineHeight: 1.7 }}>{adim.aciklama}</div>
+                </div>
+              </div>
+            ))}
+            <Link href="/siparis" onClick={() => setSiparisRehberi(false)}
+              style={{ display: 'block', background: G.grad, color: '#fff', padding: '13px', borderRadius: '50px', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', textAlign: 'center', marginTop: '.5rem' }}>
+              Hemen Sipariş Ver →
+            </Link>
+          </div>
+        </div>
+      )}
+      
       {/* POPUP */}
       {popup && (
         <div onClick={(e) => { if (e.target === e.currentTarget) setPopup(false); }}
@@ -414,25 +457,25 @@ export default function Home() {
       </nav>
 
       {/* HERO */}
-      <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '7rem 2rem 4rem', position: 'relative', overflow: 'hidden', backgroundImage: 'url(/img2.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,30,20,0.48)', backdropFilter: 'blur(2px)' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.55) 100%)', pointerEvents: 'none' }} />
+      <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '7rem 2rem 4rem', position: 'relative', overflow: 'hidden', background: '#ffffff', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        
+        
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '600px', height: '600px', background: 'radial-gradient(ellipse,rgba(30,123,110,0.2) 0%,rgba(34,197,94,0.1) 45%,transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(34,197,94,0.4)', borderRadius: '50px', padding: '6px 18px', fontSize: '12px', color: 'rgba(255,255,255,0.9)', marginBottom: '1.75rem', backdropFilter: 'blur(8px)' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(30,123,110,0.3)', borderRadius: '50px', padding: '6px 18px', fontSize: '12px', color: '#374151', marginBottom: '1.75rem', backdropFilter: 'blur(8px)' }}>
             <span style={{ width: '7px', height: '7px', background: '#22c55e', borderRadius: '50%', display: 'inline-block' }} />
             Türkiye&apos;nin En Akıllı Mutfak Robotu
           </div>
-          <h1 style={{ fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: '1.25rem', color: '#fff' }}>
+          <h1 style={{ fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 800, lineHeight: 1.15, marginBottom: '1.25rem', color: '#111827' }}>
             Mutfağınızı<br />
             <span style={{ background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Dönüştürün</span>
           </h1>
-          <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.82)', maxWidth: '540px', margin: '0 auto 2.5rem', lineHeight: 1.8 }}>
+          <p style={{ fontSize: '1.05rem', color: '#6b7280', maxWidth: '540px', margin: '0 auto 2.5rem', lineHeight: 1.8 }}>
             Pişirme, karıştırma, buharda pişirme ve daha fazlası — tek bir akıllı cihazla tüm yemeklerinizi hazırlayın.
           </p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '4rem' }}>
             <Link href="/siparis" style={{ background: G.grad, color: '#fff', padding: '13px 36px', borderRadius: '50px', fontWeight: 700, fontSize: '.95rem', textDecoration: 'none', transition: 'transform .2s,opacity .2s' }} onMouseEnter={btnHover} onMouseLeave={btnLeave}>Hemen Sipariş Ver</Link>
-            <a href="#ozellikler" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', padding: '13px 32px', borderRadius: '50px', fontWeight: 700, fontSize: '.9rem', border: '1.5px solid rgba(255,255,255,0.35)', textDecoration: 'none', backdropFilter: 'blur(8px)', transition: 'transform .2s,opacity .2s' }} onMouseEnter={btnHover} onMouseLeave={btnLeave}>Keşfet ↓</a>
+            <a href="#ozellikler" style={{ padding: '13px 32px', borderRadius: '50px', fontWeight: 700, fontSize: '.9rem', background: 'rgba(30,123,110,0.08)', color: G.teal, border: `1.5px solid ${G.teal}`, textDecoration: 'none', backdropFilter: 'blur(8px)', transition: 'transform .2s,opacity .2s' }} onMouseEnter={btnHover} onMouseLeave={btnLeave}>Keşfet ↓</a>
           </div>
           <div style={{ position: 'relative', width: '500px', maxWidth: '90vw', height: '420px', margin: '0 auto' }}>
             <div style={{ position: 'absolute', top: '50%', left: '50%', width: '320px', height: '320px', border: '1.5px dashed rgba(34,197,94,0.3)', borderRadius: '50%', transform: 'translate(-50%,-50%)', animation: 'spinRing 20s linear infinite', pointerEvents: 'none' }} />
@@ -450,9 +493,9 @@ export default function Home() {
               <div key={i}
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-12px) scale(1.1)'; e.currentTarget.style.background = 'rgba(255,255,255,0.22)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; }}
-                style={{ position: 'absolute', top: c.top, left: c.left, right: c.right, bottom: c.bottom, background: 'rgba(255,255,255,0.12)', border: '1.5px solid rgba(255,255,255,0.2)', borderRadius: '16px', padding: '.85rem 1.1rem', backdropFilter: 'blur(12px)', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 3, animation: 'floatCard 5s ease-in-out infinite', animationDelay: c.delay, textAlign: 'center', minWidth: '100px', transition: 'transform .3s ease, background .2s', cursor: 'default' }}>
+                style={{ position: 'absolute', top: c.top, left: c.left, right: c.right, bottom: c.bottom, background: 'rgba(255,255,255,0.9)', border: '1.5px solid rgba(30,123,110,0.2)', borderRadius: '16px', padding: '.85rem 1.1rem', backdropFilter: 'blur(12px)', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 3, animation: 'floatCard 5s ease-in-out infinite', animationDelay: c.delay, textAlign: 'center', minWidth: '100px', transition: 'transform .3s ease, background .2s', cursor: 'default' }}>
                 <div style={{ fontSize: '1.4rem', fontWeight: 800, background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{c.num}</div>
-                <div style={{ fontSize: '.7rem', color: 'rgba(255,255,255,0.85)', fontWeight: 600, marginTop: '2px' }}>{c.lbl}</div>
+                <div style={{ fontSize: '.7rem', color: '#374151', fontWeight: 600, marginTop: '2px' }}>{c.lbl}</div>
               </div>
             ))}
           </div>
@@ -481,8 +524,8 @@ export default function Home() {
             <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#fff', marginBottom: '1rem', lineHeight: 1.3 }}>
               Mutfağınızın <span style={{ color: '#bbf7d0' }}>Akıllı Yardımcısı</span>
             </h2>
-            <p style={{ color: 'rgba(255,255,255,0.85)', lineHeight: 1.9, marginBottom: '1rem', fontSize: '.9rem' }}>Thermomix, 50 yılı aşkın Alman mühendislik birikimiyle tasarlanmış dünyanın en gelişmiş mutfak robotu.</p>
-            <p style={{ color: 'rgba(255,255,255,0.85)', lineHeight: 1.9, fontSize: '.9rem' }}>Çorbadan tatlıya, ekmekten makarnaya — her gün yeni tarifler keşfedin.</p>
+            <p style={{ color: '#374151', lineHeight: 1.9, marginBottom: '1rem', fontSize: '.9rem' }}>Thermomix, 50 yılı aşkın Alman mühendislik birikimiyle tasarlanmış dünyanın en gelişmiş mutfak robotu.</p>
+            <p style={{ color: '#374151', lineHeight: 1.9, fontSize: '.9rem' }}>Çorbadan tatlıya, ekmekten makarnaya — her gün yeni tarifler keşfedin.</p>
             <div style={{ display: 'flex', gap: '2rem', marginTop: '1.75rem' }}>
               {[{ n: '22+', l: 'İşlev' }, { n: '80K', l: 'Tarif' }, { n: '50+', l: 'Yıl Deneyim' }].map((s, i) => (
                 <div key={i}>
