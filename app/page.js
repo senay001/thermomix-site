@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
+const WP = "https://wa.me/905323106878?text=Merhaba,%20Thermomix%20TM7%20hakkında%20bilgi%20almak%20istiyorum.";
+
 const G = {
   teal: '#1e7b6e',
   green: '#22c55e',
@@ -190,6 +192,45 @@ function Testimonials() {
   );
 }
 
+function KampanyaSlider() {
+  const gorseller = ['/kampanya1.jpeg', '/kampanya2.png', '/kampanya3.jpeg', '/kampanya4.jpeg'];
+  const [aktif, setAktif] = useState(0);
+  const autoRef = useRef(null);
+
+  const resetAuto = () => {
+    clearInterval(autoRef.current);
+    autoRef.current = setInterval(() => setAktif(p => (p + 1) % gorseller.length), 2500);
+  };
+  useEffect(() => { resetAuto(); return () => clearInterval(autoRef.current); }, []);
+
+  const ileri = () => { setAktif(p => (p + 1) % gorseller.length); resetAuto(); };
+  const geri = () => { setAktif(p => (p - 1 + gorseller.length) % gorseller.length); resetAuto(); };
+
+  return (
+    <div style={{ width: '100%', overflow: 'hidden', borderRadius: '16px', position: 'relative' }}>
+      <div style={{ display: 'flex', transition: 'transform .6s cubic-bezier(.4,0,.2,1)', transform: `translateX(-${aktif * 100}%)` }}>
+        {gorseller.map((g, i) => (
+          <img key={i} src={g} alt={`Kampanya ${i + 1}`} style={{ minWidth: '100%', width: '100%', objectFit: 'contain', flexShrink: 0 }} />
+        ))}
+      </div>
+
+      {[{ dir: 'left', fn: geri, pos: 'left' }, { dir: 'right', fn: ileri, pos: 'right' }].map(({ dir, fn, pos }) => (
+        <button key={dir} onClick={fn}
+          style={{ position: 'absolute', top: '50%', [pos]: '10px', transform: 'translateY(-50%)', width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.85)', border: '1.5px solid rgba(30,123,110,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '15px', color: '#1e7b6e', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', zIndex: 2 }}>
+          {dir === 'left' ? '←' : '→'}
+        </button>
+      ))}
+
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '.75rem' }}>
+        {gorseller.map((_, i) => (
+          <button key={i} onClick={() => { setAktif(i); resetAuto(); }}
+            style={{ width: i === aktif ? '24px' : '8px', height: '8px', borderRadius: '4px', background: i === aktif ? '#1e7b6e' : 'rgba(30,123,110,0.3)', border: 'none', cursor: 'pointer', transition: 'all .3s', padding: 0 }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function BentoGrid() {
   const hover = (e) => { e.currentTarget.style.transform = 'scale(1.04)'; e.currentTarget.style.boxShadow = '0 20px 50px rgba(30,123,110,0.15)'; };
   const leave = (e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = 'none'; };
@@ -213,7 +254,7 @@ function BentoGrid() {
         <FadeUp>
           <div onMouseEnter={hover} onMouseLeave={leave} style={{ transition: 'transform .25s,box-shadow .25s', gridColumn: '1/2', gridRow: '1/3', background: G.grad, borderRadius: '24px', padding: '2rem', color: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', minHeight: '320px', position: 'relative', overflow: 'hidden', cursor: 'default' }}>
             <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '160px', height: '160px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }} />
-            <div style={{ position: 'absolute', top: '20px', left: '20px', fontSize: '48px' }}></div>
+            <div style={{ position: 'absolute', top: '20px', left: '20px', fontSize: '48px' }}>🏆</div>
             <div style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '.25rem' }}>20+</div>
             <div style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '.5rem' }}>Mutfak Aleti Tek Cihazda</div>
             <p style={{ fontSize: '.82rem', opacity: .9, lineHeight: 1.7 }}>Blender, terazi, buharlık, mikser ve daha fazlası — hepsi Thermomix TM7&apos;de.</p>
@@ -221,22 +262,13 @@ function BentoGrid() {
         </FadeUp>
         <FadeUp delay={0.1}>
           <div onMouseEnter={hover} onMouseLeave={leave} style={{ transition: 'transform .25s,box-shadow .25s', background: '#fff', border: '1.5px solid rgba(30,123,110,0.2)', borderRadius: '24px', padding: '0 0 1.75rem 0', boxShadow: '0 4px 20px rgba(30,123,110,0.07)', cursor: 'default', overflow: 'hidden' }}>
-  
-            {/* Üst Kısım: Tam Genişlikte Fotoğraf */}
             <div style={{ width: '100%', height: '180px', marginBottom: '1.25rem', overflow: 'hidden' }}>
-              <img 
-                src="feat1.png" 
-                alt="10 inç Dokunmatik Ekran" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-              />
+              <img src="/feat1.png" alt="10 inç Dokunmatik Ekran" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
-
-            {/* Alt Kısım: Metin Alanı (Padding içeride korundu) */}
             <div style={{ padding: '0 1.75rem' }}>
               <h3 style={{ fontWeight: 800, color: '#111827', marginBottom: '.4rem', fontSize: '1.25rem' }}>10&quot; Dokunmatik Ekran</h3>
               <p style={{ fontSize: '.82rem', color: '#374151', lineHeight: 1.7 }}>Akıllı telefon benzeri kullanım kolaylığı. Tarifleri adım adım takip edin.</p>
             </div>
-
           </div>
         </FadeUp>
         <FadeUp delay={0.15}>
@@ -248,22 +280,13 @@ function BentoGrid() {
         </FadeUp>
         <FadeUp delay={0.2}>
           <div onMouseEnter={hover} onMouseLeave={leave} style={{ transition: 'transform .25s,box-shadow .25s', background: '#fff', border: '1.5px solid rgba(30,123,110,0.2)', borderRadius: '24px', padding: '0 0 1.75rem 0', boxShadow: '0 4px 20px rgba(30,123,110,0.06)', cursor: 'default', overflow: 'hidden' }}>
-  
-            {/* Üst Kısım: Tam Genişlikte Fotoğraf */}
             <div style={{ width: '100%', height: '180px', marginBottom: '1.25rem', overflow: 'hidden' }}>
-              <img 
-                src="feat2.png" 
-                alt="Fısıltı Kadar Sessiz Motor Teknolojisi" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-              />
+              <img src="/feat2.png" alt="Sessiz Motor" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
-
-            {/* Alt Kısım: Metin Alanı */}
             <div style={{ padding: '0 1.75rem' }}>
               <h3 style={{ fontWeight: 800, color: '#111827', marginBottom: '.4rem' }}>Fısıltı Kadar Sessiz</h3>
               <p style={{ fontSize: '.82rem', color: '#374151', lineHeight: 1.7 }}>Yeni nesil motor teknolojisi. Sabah erken saatlerde bile rahatlıkla kullanın.</p>
             </div>
-
           </div>
         </FadeUp>
         <FadeUp delay={0.25}>
@@ -282,6 +305,7 @@ export default function Home() {
   const [menuAcik, setMenuAcik] = useState(false);
   const [menuKapaniyor, setMenuKapaniyor] = useState(false);
   const [popup, setPopup] = useState(true);
+  const [kampanya, setKampanya] = useState(false);
   const [siparisRehberi, setSiparisRehberi] = useState(false);
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -298,7 +322,6 @@ export default function Home() {
     { t: '20+ Mutfak Aleti', d: 'Tek cihaz; blender, terazi, buharlık, mikser ve daha fazlasının yerini alır.', img: '/feat6.png' },
   ];
 
-  // Varoma kaldırıldı — 3 aksesuar kaldı
   const accessories = [
     { img: '/acc2.png', t: 'Kelebek Aksesuarı', d: 'Krema çırpma ve hassas karıştırma için.', bg: G.gradSoft },
     { img: '/acc3.png', t: 'ThermoServer', d: 'Yemeklerinizi saatlerce sıcak tutan kap.', bg: G.gradSoft },
@@ -314,14 +337,36 @@ export default function Home() {
     <main style={{ fontFamily: "'Segoe UI',sans-serif", background: G.bg, color: '#1a1f2e', overflowX: 'hidden', paddingTop: '60px' }}>
 
       {/* Nasıl Sipariş Verilir — sabit köşe butonu */}
-      <div
-        onClick={() => setSiparisRehberi(true)}
+      <div onClick={() => setSiparisRehberi(true)}
         style={{ position: 'fixed', bottom: '24px', left: '24px', zIndex: 99, background: '#fff', border: `1.5px solid ${G.teal}`, borderRadius: '16px', padding: '10px 16px', cursor: 'pointer', boxShadow: '0 4px 20px rgba(30,123,110,0.15)', display: 'flex', alignItems: 'center', gap: '8px', transition: 'transform .2s' }}
         onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
         onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
         <span style={{ fontSize: '1.2rem' }}>🛒</span>
         <span style={{ fontSize: '.8rem', fontWeight: 700, color: G.teal, whiteSpace: 'nowrap' }}>Nasıl Sipariş Verilir?</span>
       </div>
+
+      {/* Kampanyalar butonu */}
+      <div onClick={() => setKampanya(true)}
+        style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 99, background: G.grad, borderRadius: '16px', padding: '10px 16px', cursor: 'pointer', boxShadow: '0 4px 20px rgba(30,123,110,0.25)', display: 'flex', alignItems: 'center', gap: '8px', transition: 'transform .2s' }}
+        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+        <span style={{ fontSize: '1.2rem' }}>🎉</span>
+        <span style={{ fontSize: '.8rem', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap' }}>Kampanyalar</span>
+      </div>
+
+      {/* Kampanya popup — kısaltıldı */}
+      {kampanya && (
+        <div onClick={(e) => { if (e.target === e.currentTarget) setKampanya(false); }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(6px)', padding: '1rem' }}>
+          <div style={{ background: '#fff', borderRadius: '24px', padding: '1.5rem', maxWidth: '480px', width: '100%', position: 'relative', boxShadow: '0 32px 80px rgba(30,123,110,0.2)' }}>
+            <button onClick={() => setKampanya(false)}
+              style={{ position: 'absolute', top: '.75rem', right: '.75rem', background: 'rgba(0,0,0,0.06)', border: 'none', color: '#555', fontSize: '1rem', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5 }}>✕</button>
+            <div style={{ display: 'inline-block', background: G.gradSoft, color: G.teal, fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', padding: '4px 14px', borderRadius: '50px', marginBottom: '.6rem' }}>KAMPANYALAR</div>
+            <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#111827', marginBottom: '1rem' }}>Güncel Kampanyalar</h2>
+            <KampanyaSlider />
+          </div>
+        </div>
+      )}
 
       {/* Sipariş rehberi popup */}
       {siparisRehberi && (
@@ -331,13 +376,17 @@ export default function Home() {
             <button onClick={() => setSiparisRehberi(false)}
               style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'rgba(0,0,0,0.06)', border: 'none', color: '#555', fontSize: '1rem', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
             <div style={{ display: 'inline-block', background: G.gradSoft, color: G.teal, fontSize: '11px', fontWeight: 700, letterSpacing: '1.5px', padding: '5px 16px', borderRadius: '50px', marginBottom: '1rem' }}>SİPARİŞ REHBERİ</div>
-            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#111827', marginBottom: '1.5rem' }}>Nasıl Sipariş Verilir?</h2>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#111827', marginBottom: '.4rem' }}>Nasıl Sipariş Veririm?</h2>
+            <p style={{ fontSize: '.85rem', color: '#6b7280', marginBottom: '1.5rem', lineHeight: 1.6 }}>Hızlı ve Güvenli Thermomix TM7 Sipariş Vermenin Adımları</p>
             {[
-              { no: '1', baslik: 'Formu Doldurun', aciklama: 'Sipariş Ver butonuna tıklayın. Adınızı, soyadınızı, e-posta ve telefon numaranızı girin.' },
-              { no: '2', baslik: 'Uzmanımız Sizi Arasın', aciklama: 'Formunuz bize ulaştıktan sonra uzman danışmanımız en kısa sürede sizi arayacak.' },
-              { no: '3', baslik: 'Ürün Tanıtımı', aciklama: 'Danışmanımız size Thermomix TM7\'yi detaylıca tanıtır, tüm sorularınızı yanıtlar.' },
-              { no: '4', baslik: 'Siparişinizi Verin', aciklama: 'Vade farksız 9 taksit seçeneğiyle siparişinizi kolayca verebilirsiniz.' },
-              { no: '5', baslik: 'Teslimat ve Kurulum', aciklama: 'Ürününüz Türkiye geneline ücretsiz teslim edilir. Uzmanımız kurulum ve eğitim için yanınızda olur.' },
+              { no: '1', baslik: 'Ürünü Sepete Ekleyin', aciklama: 'Sepetteki ürünleri kontrol edin ve "Ödeme" butonuna tıklayın.' },
+              { no: '2', baslik: 'Ödeme Butonuna Tıklayın', aciklama: 'Sepetteki ürünleri kontrol edin ve "Ödeme" butonuna tıklayın.' },
+              { no: '3', baslik: 'Tekrar Ödeme Butonuna Tıklayın', aciklama: 'Sepetteki ürünleri kontrol edin ve tekrar "Ödeme" butonuna tıklayın.' },
+              { no: '4', baslik: 'Kayıt Oluşturun', aciklama: 'Bu adımda "Şimdi Kayıt Olun" butonuna tıklayarak sipariş için kayıt oluyoruz.' },
+              { no: '5', baslik: 'Kaydı Onaylayın', aciklama: 'Buradaki bilgileri eksiksiz bir şekilde doldurun.' },
+              { no: '6', baslik: 'Bilgilerinizi Kontrol Edin', aciklama: 'Bilgilerinizi kontrol ettikten sonra aşağı kaydırın.' },
+              { no: '7', baslik: 'Danışman ID Girin', aciklama: '"TM009390" danışman ID girerek ücretsiz danışmanlık alabilir, eğitim ve tarif gruplarına dahil olabilir ve o aya özel kampanya ve indirimlerden faydalanabilirsiniz.' },
+              { no: '8', baslik: 'Siparişinizi Tamamlayın', aciklama: 'Son adımda "Sipariş Ver" dedikten sonra siparişiniz başarılı bir şekilde oluşturulmuş olacaktır.' },
             ].map((adim, i) => (
               <div key={i} style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', alignItems: 'flex-start' }}>
                 <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: G.grad, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '1rem', flexShrink: 0 }}>{adim.no}</div>
@@ -347,34 +396,32 @@ export default function Home() {
                 </div>
               </div>
             ))}
-            <Link href="/siparis" onClick={() => setSiparisRehberi(false)}
+            <a href={WP} target="_blank" rel="noopener noreferrer" onClick={() => setSiparisRehberi(false)}
               style={{ display: 'block', background: G.grad, color: '#fff', padding: '13px', borderRadius: '50px', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', textAlign: 'center', marginTop: '.5rem' }}>
-              Hemen Sipariş Ver →
-            </Link>
+              WhatsApp ile Sipariş Ver →
+            </a>
           </div>
         </div>
       )}
-      
+
       {/* POPUP */}
       {popup && (
         <div onClick={(e) => { if (e.target === e.currentTarget) setPopup(false); }}
           style={{ position: 'fixed', inset: 0, background: 'rgba(10,30,20,0.6)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)', touchAction: 'manipulation', padding: '1rem' }}>
           <div style={{ background: '#fff', border: '1.5px solid rgba(30,123,110,0.2)', borderRadius: '24px', maxWidth: '360px', width: '100%', position: 'relative', boxShadow: '0 32px 80px rgba(30,123,110,0.2)', overflow: 'hidden' }}>
-            {/* Kapatma butonu — büyük ve belirgin */}
             <button onClick={() => setPopup(false)}
               style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.5)', border: 'none', color: '#fff', fontSize: '1rem', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10, touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', lineHeight: 1 }}>✕</button>
-            {/* Küçültülmüş görsel */}
-            <img src="/popup.png" alt="Kampanya" style={{ width: '100%', display: 'block', maxHeight: '450px', objectFit: 'cover', objectPosition: 'top' }} />
+            <img src="/kampanya4.jpeg" alt="Kampanya" style={{ width: '100%', display: 'block', maxHeight: '450px', objectFit: 'cover', objectPosition: 'top' }} />
             <div style={{ padding: '1rem 1.5rem 1.25rem', textAlign: 'center' }}>
-              <Link href="/siparis" onClick={() => setPopup(false)}
+              <a href={WP} target="_blank" rel="noopener noreferrer" onClick={() => setPopup(false)}
                 style={{ display: 'inline-block', background: G.grad, color: '#fff', padding: '11px 36px', borderRadius: '50px', fontWeight: 700, fontSize: '.95rem', textDecoration: 'none', transition: 'transform .2s,opacity .2s' }}
                 onMouseEnter={btnHover} onMouseLeave={btnLeave}>
                 Hemen Sipariş Ver →
-              </Link>
+              </a>
             </div>
           </div>
         </div>
-      )} 
+      )}
 
       {/* NAV */}
       <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(30,123,110,0.12)', padding: '.75rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -383,7 +430,6 @@ export default function Home() {
           <span style={{ fontSize: '.95rem', fontWeight: 800, background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>thermomutfaksefi.com</span>
         </Link>
 
-        {/* Masaüstü */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '.25rem' }} className="desktop-nav">
           {['Özellikler', 'Aksesuarlar', 'Hakkında', 'İletişim'].map((item, i) => (
             <a key={i} href={`#${['ozellikler','aksesuarlar','hakkinda','iletisim'][i]}`}
@@ -391,58 +437,46 @@ export default function Home() {
               {item}
             </a>
           ))}
-          <Link href="/ekibimiz"
+          <a href="https://wa.me/905323106878?text=Merhaba,%20ekibinize%20katılmak%20istiyorum." target="_blank" rel="noopener noreferrer"
             style={{ color: G.teal, textDecoration: 'none', fontSize: '.82rem', fontWeight: 700, padding: '6px 12px', border: `1.5px solid ${G.teal}`, borderRadius: '50px', marginLeft: '4px', transition: 'all .2s', whiteSpace: 'nowrap' }}
             onMouseEnter={e => { e.currentTarget.style.background = G.teal; e.currentTarget.style.color = '#fff'; }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = G.teal; }}>
             Ekibimize Katılın
-          </Link>
-          <Link href="/siparis"
+          </a>
+          <a href={WP} target="_blank" rel="noopener noreferrer"
             style={{ background: G.grad, color: '#fff', padding: '8px 16px', borderRadius: '50px', fontSize: '.82rem', fontWeight: 700, textDecoration: 'none', marginLeft: '4px', whiteSpace: 'nowrap' }}
             onMouseEnter={btnHover} onMouseLeave={btnLeave}>
             Sipariş Ver
-          </Link>
+          </a>
         </div>
 
-        {/* Hamburger butonu — sadece mobilde */}
         <button className="hamburger-btn" onClick={() => {
-                                                            if (menuAcik) {
-                                                              setMenuKapaniyor(true);
-                                                              setTimeout(() => { setMenuAcik(false); setMenuKapaniyor(false); }, 220);
-                                                            } else {
-                                                              setMenuAcik(true);
-                                                            }
-                                                          }}
+          if (menuAcik) { setMenuKapaniyor(true); setTimeout(() => { setMenuAcik(false); setMenuKapaniyor(false); }, 220); }
+          else { setMenuAcik(true); }
+        }}
           style={{ display: 'none', flexDirection: 'column', gap: '5px', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
           <span style={{ width: '24px', height: '2px', background: menuAcik ? 'transparent' : G.teal, transition: 'all .3s', transform: menuAcik ? 'rotate(45deg) translate(5px,5px)' : 'none', display: 'block' }} />
           <span style={{ width: '24px', height: '2px', background: G.teal, transition: 'all .3s', transform: menuAcik ? 'rotate(-45deg)' : 'none', display: 'block' }} />
           <span style={{ width: '24px', height: '2px', background: menuAcik ? 'transparent' : G.teal, transition: 'all .3s', display: 'block' }} />
         </button>
 
-        {/* Mobil menü */}
         {menuAcik && (
-          <div style={{ 
-            position: 'absolute', top: '100%', left: 0, right: 0, 
-            background: 'rgba(255,255,255,0.98)', backdropFilter: 'blur(16px)', 
-            borderBottom: '1px solid rgba(30,123,110,0.12)', 
-            padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '.75rem',
-            animation: menuKapaniyor ? 'menuKapa .22s ease forwards' : 'menuAc .25s ease',
-          }}>
-        {['Özellikler', 'Aksesuarlar', 'Hakkında', 'İletişim'].map((item, i) => (
+          <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'rgba(255,255,255,0.98)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(30,123,110,0.12)', padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '.75rem', animation: menuKapaniyor ? 'menuKapa .22s ease forwards' : 'menuAc .25s ease' }}>
+            {['Özellikler', 'Aksesuarlar', 'Hakkında', 'İletişim'].map((item, i) => (
               <a key={i} href={`#${['ozellikler','aksesuarlar','hakkinda','iletisim'][i]}`}
                 onClick={() => setMenuAcik(false)}
                 style={{ color: '#374151', textDecoration: 'none', fontSize: '1rem', fontWeight: 500, padding: '8px 0', borderBottom: '1px solid rgba(30,123,110,0.08)' }}>
                 {item}
               </a>
             ))}
-            <Link href="/ekibimiz" onClick={() => setMenuAcik(false)}
+            <a href="https://wa.me/905323106878?text=Merhaba,%20ekibinize%20katılmak%20istiyorum." target="_blank" rel="noopener noreferrer" onClick={() => setMenuAcik(false)}
               style={{ color: G.teal, textDecoration: 'none', fontSize: '1rem', fontWeight: 700, padding: '8px 0', borderBottom: '1px solid rgba(30,123,110,0.08)' }}>
               Ekibimize Katılın
-            </Link>
-            <Link href="/siparis" onClick={() => setMenuAcik(false)}
+            </a>
+            <a href={WP} target="_blank" rel="noopener noreferrer" onClick={() => setMenuAcik(false)}
               style={{ background: G.grad, color: '#fff', padding: '12px', borderRadius: '50px', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', textAlign: 'center', marginTop: '.25rem' }}>
               Sipariş Ver
-            </Link>
+            </a>
           </div>
         )}
 
@@ -457,12 +491,10 @@ export default function Home() {
       </nav>
 
       {/* HERO */}
-      <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '7rem 2rem 4rem', position: 'relative', overflow: 'hidden', background: '#ffffff', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        
-        
+      <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '7rem 2rem 4rem', position: 'relative', overflow: 'hidden', background: '#ffffff' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '600px', height: '600px', background: 'radial-gradient(ellipse,rgba(30,123,110,0.2) 0%,rgba(34,197,94,0.1) 45%,transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(30,123,110,0.3)', borderRadius: '50px', padding: '6px 18px', fontSize: '12px', color: '#374151', marginBottom: '1.75rem', backdropFilter: 'blur(8px)' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(30,123,110,0.06)', border: '1.5px solid rgba(30,123,110,0.3)', borderRadius: '50px', padding: '6px 18px', fontSize: '12px', color: '#374151', marginBottom: '1.75rem' }}>
             <span style={{ width: '7px', height: '7px', background: '#22c55e', borderRadius: '50%', display: 'inline-block' }} />
             Türkiye&apos;nin En Akıllı Mutfak Robotu
           </div>
@@ -474,14 +506,14 @@ export default function Home() {
             Pişirme, karıştırma, buharda pişirme ve daha fazlası — tek bir akıllı cihazla tüm yemeklerinizi hazırlayın.
           </p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '4rem' }}>
-            <Link href="/siparis" style={{ background: G.grad, color: '#fff', padding: '13px 36px', borderRadius: '50px', fontWeight: 700, fontSize: '.95rem', textDecoration: 'none', transition: 'transform .2s,opacity .2s' }} onMouseEnter={btnHover} onMouseLeave={btnLeave}>Hemen Sipariş Ver</Link>
-            <a href="#ozellikler" style={{ padding: '13px 32px', borderRadius: '50px', fontWeight: 700, fontSize: '.9rem', background: 'rgba(30,123,110,0.08)', color: G.teal, border: `1.5px solid ${G.teal}`, textDecoration: 'none', backdropFilter: 'blur(8px)', transition: 'transform .2s,opacity .2s' }} onMouseEnter={btnHover} onMouseLeave={btnLeave}>Keşfet ↓</a>
+            <a href={WP} target="_blank" rel="noopener noreferrer" style={{ background: G.grad, color: '#fff', padding: '13px 36px', borderRadius: '50px', fontWeight: 700, fontSize: '.95rem', textDecoration: 'none', transition: 'transform .2s,opacity .2s' }} onMouseEnter={btnHover} onMouseLeave={btnLeave}>Hemen Sipariş Ver</a>
+            <a href="#ozellikler" style={{ padding: '13px 32px', borderRadius: '50px', fontWeight: 700, fontSize: '.9rem', background: 'rgba(30,123,110,0.08)', color: G.teal, border: `1.5px solid ${G.teal}`, textDecoration: 'none', transition: 'transform .2s,opacity .2s' }} onMouseEnter={btnHover} onMouseLeave={btnLeave}>Keşfet ↓</a>
           </div>
           <div style={{ position: 'relative', width: '500px', maxWidth: '90vw', height: '420px', margin: '0 auto' }}>
             <div style={{ position: 'absolute', top: '50%', left: '50%', width: '320px', height: '320px', border: '1.5px dashed rgba(34,197,94,0.3)', borderRadius: '50%', transform: 'translate(-50%,-50%)', animation: 'spinRing 20s linear infinite', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', top: '50%', left: '50%', width: '410px', height: '410px', border: '1px dashed rgba(30,123,110,0.2)', borderRadius: '50%', transform: 'translate(-50%,-50%)', animation: 'spinRing 30s linear infinite reverse', pointerEvents: 'none' }} />
             <div onMouseEnter={e => e.currentTarget.style.transform = 'translate(-50%,-50%) scale(1.07)'} onMouseLeave={e => e.currentTarget.style.transform = 'translate(-50%,-50%) scale(1)'}
-              style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '260px', height: '260px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '2px solid rgba(34,197,94,0.4)', backdropFilter: 'blur(8px)', boxShadow: '0 20px 60px rgba(30,123,110,0.3)', zIndex: 2, animation: 'floatImg 4s ease-in-out infinite', overflow: 'hidden', transition: 'transform .4s ease', cursor: 'default' }}>
+              style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: '260px', height: '260px', borderRadius: '50%', background: '#f0fdf4', border: '2px solid rgba(34,197,94,0.4)', boxShadow: '0 20px 60px rgba(30,123,110,0.2)', zIndex: 2, animation: 'floatImg 4s ease-in-out infinite', overflow: 'hidden', transition: 'transform .4s ease', cursor: 'default' }}>
               <img src="/img1.png" alt="Thermomix TM7" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             {[
@@ -491,9 +523,9 @@ export default function Home() {
               { num: '50+', lbl: 'Yıl Deneyim', bottom: '12%', right: '0%', delay: '.5s' },
             ].map((c, i) => (
               <div key={i}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-12px) scale(1.1)'; e.currentTarget.style.background = 'rgba(255,255,255,0.22)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; }}
-                style={{ position: 'absolute', top: c.top, left: c.left, right: c.right, bottom: c.bottom, background: 'rgba(255,255,255,0.9)', border: '1.5px solid rgba(30,123,110,0.2)', borderRadius: '16px', padding: '.85rem 1.1rem', backdropFilter: 'blur(12px)', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 3, animation: 'floatCard 5s ease-in-out infinite', animationDelay: c.delay, textAlign: 'center', minWidth: '100px', transition: 'transform .3s ease, background .2s', cursor: 'default' }}>
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-12px) scale(1.1)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; }}
+                style={{ position: 'absolute', top: c.top, left: c.left, right: c.right, bottom: c.bottom, background: '#fff', border: '1.5px solid rgba(30,123,110,0.2)', borderRadius: '16px', padding: '.85rem 1.1rem', boxShadow: '0 8px 24px rgba(30,123,110,0.12)', zIndex: 3, animation: 'floatCard 5s ease-in-out infinite', animationDelay: c.delay, textAlign: 'center', minWidth: '100px', transition: 'transform .3s ease', cursor: 'default' }}>
                 <div style={{ fontSize: '1.4rem', fontWeight: 800, background: G.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{c.num}</div>
                 <div style={{ fontSize: '.7rem', color: '#374151', fontWeight: 600, marginTop: '2px' }}>{c.lbl}</div>
               </div>
@@ -510,7 +542,7 @@ export default function Home() {
       {/* ÖZELLİKLER */}
       <section id="ozellikler" style={{ width: '100%' }}><Slider features={features} /></section>
 
-      {/* HAKKINDA — yeşil bg */}
+      {/* HAKKINDA */}
       <section id="hakkinda" style={{ background: G.grad, padding: '5rem 2rem' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
           <FadeUp>
@@ -524,8 +556,8 @@ export default function Home() {
             <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#fff', marginBottom: '1rem', lineHeight: 1.3 }}>
               Mutfağınızın <span style={{ color: '#bbf7d0' }}>Akıllı Yardımcısı</span>
             </h2>
-            <p style={{ color: '#374151', lineHeight: 1.9, marginBottom: '1rem', fontSize: '.9rem' }}>Thermomix, 50 yılı aşkın Alman mühendislik birikimiyle tasarlanmış dünyanın en gelişmiş mutfak robotu.</p>
-            <p style={{ color: '#374151', lineHeight: 1.9, fontSize: '.9rem' }}>Çorbadan tatlıya, ekmekten makarnaya — her gün yeni tarifler keşfedin.</p>
+            <p style={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.9, marginBottom: '1rem', fontSize: '.9rem' }}>Thermomix, 50 yılı aşkın Alman mühendislik birikimiyle tasarlanmış dünyanın en gelişmiş mutfak robotu.</p>
+            <p style={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.9, fontSize: '.9rem' }}>Çorbadan tatlıya, ekmekten makarnaya — her gün yeni tarifler keşfedin.</p>
             <div style={{ display: 'flex', gap: '2rem', marginTop: '1.75rem' }}>
               {[{ n: '22+', l: 'İşlev' }, { n: '80K', l: 'Tarif' }, { n: '50+', l: 'Yıl Deneyim' }].map((s, i) => (
                 <div key={i}>
@@ -541,7 +573,7 @@ export default function Home() {
       <BentoGrid />
       <Testimonials />
 
-      {/* AKSESUARLAR — varoma kaldırıldı */}
+      {/* AKSESUARLAR */}
       <section id="aksesuarlar" style={{ padding: '5rem 2rem', maxWidth: '1100px', margin: '0 auto' }}>
         <FadeUp>
           <div style={{ textAlign: 'center' }}>{chip('AKSESUARLAR')}</div>
@@ -575,27 +607,15 @@ export default function Home() {
           <p style={{ color: 'rgba(255,255,255,0.85)', marginBottom: '2rem', fontSize: '.9rem' }}>Tarifler, ipuçları ve kampanyalar için bize katılın</p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             {[
-              { label: 'YouTube', href: 'https://youtube.com', img: '/yt.png' },
-              { label: 'Instagram', href: 'https://instagram.com', img: '/in.png' },
-              { label: 'WhatsApp', href: 'https://whatsapp.com', img: '/wp.png' },
+              { label: 'YouTube', href: 'https://youtube.com/@senaylatatlitarifler', img: '/yt.png' },
+              { label: 'Instagram', href: 'https://www.instagram.com/senaylatatlitarifler', img: '/in.png' },
+              { label: 'WhatsApp', href: 'https://wa.me/905323106878', img: '/wp.png' },
             ].map((s, i) => (
               <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
-                style={{ 
-                  background: 'rgba(255,255,255,0.15)', 
-                  border: '1.5px solid rgba(255,255,255,0.25)', 
-                  borderRadius: '16px', overflow: 'hidden', color: '#fff', 
-                  textDecoration: 'none', width: '100px', height: '100px',
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', 
-                  justifyContent: 'center', gap: '.5rem',
-                  backdropFilter: 'blur(8px)', transition: 'background .2s,transform .2s',
-                  flexShrink: 0,
-                }}
+                style={{ background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.25)', borderRadius: '16px', overflow: 'hidden', color: '#fff', textDecoration: 'none', width: '100px', height: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '.5rem', transition: 'background .2s,transform .2s', flexShrink: 0 }}
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.25)'; e.currentTarget.style.transform = 'translateY(-5px)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.transform = 'translateY(0)'; }}>
-                {s.img
-                  ? <img src={s.img} alt={s.label} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }} />
-                  : <div style={{ width: '48px', height: '48px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px' }} />
-                }
+                {s.img ? <img src={s.img} alt={s.label} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }} /> : <div style={{ width: '48px', height: '48px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px' }} />}
                 <span style={{ fontSize: '.75rem', fontWeight: 600 }}>{s.label}</span>
               </a>
             ))}
@@ -603,7 +623,7 @@ export default function Home() {
         </FadeUp>
       </section>
 
-      {/* CTA / İLETİŞİM */}
+      {/* CTA */}
       <section id="iletisim" style={{ padding: '5rem 2rem', textAlign: 'center', background: G.bg }}>
         <FadeUp>
           <h2 style={{ fontSize: '2.1rem', fontWeight: 800, color: '#111827', marginBottom: '1rem' }}>
@@ -612,14 +632,15 @@ export default function Home() {
           <p style={{ color: '#374151', maxWidth: '460px', margin: '0 auto 2rem', lineHeight: 1.8, fontSize: '.9rem' }}>
             Türkiye geneline ücretsiz teslimat. Uzman ekibimiz kurulum ve eğitim için yanınızda.
           </p>
-          <Link href="/siparis" style={{ display: 'inline-block', background: G.grad, color: '#fff', padding: '15px 48px', borderRadius: '50px', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', transition: 'transform .2s,opacity .2s' }} onMouseEnter={btnHover} onMouseLeave={btnLeave}>
-            Sipariş Formu →
-          </Link>
+          <a href={WP} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: G.grad, color: '#fff', padding: '15px 48px', borderRadius: '50px', fontWeight: 700, fontSize: '1rem', textDecoration: 'none', transition: 'transform .2s,opacity .2s' }} onMouseEnter={btnHover} onMouseLeave={btnLeave}>
+            WhatsApp ile Sipariş Ver →
+          </a>
         </FadeUp>
       </section>
 
-      <footer style={{ background: '#111827', color: '#6b7280', textAlign: 'center', padding: '1.25rem', fontSize: '.8rem' }}>
-        © 2025 thermosiparis.com — Tüm hakları saklıdır.
+      <footer style={{ background: '#111827', color: '#9ca3af', textAlign: 'center', padding: '1.5rem', fontSize: '.8rem' }}>
+        <div style={{ marginBottom: '.5rem', color: '#22c55e', fontWeight: 700 }}>Danışman Kodum: TM009390</div>
+        © 2026 thermomutfaksefi.com — Tüm hakları saklıdır.
       </footer>
     </main>
   );
