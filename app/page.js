@@ -411,7 +411,7 @@ export default function Home() {
           <div style={{ background: '#fff', border: '1.5px solid rgba(30,123,110,0.2)', borderRadius: '24px', maxWidth: '360px', width: '100%', position: 'relative', boxShadow: '0 32px 80px rgba(30,123,110,0.2)', overflow: 'hidden' }}>
             <button onClick={() => setPopup(false)}
               style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.5)', border: 'none', color: '#fff', fontSize: '1rem', cursor: 'pointer', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10, touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', lineHeight: 1 }}>✕</button>
-            <img src="/kampanya4.jpeg" alt="Kampanya" style={{ width: '100%', display: 'block', maxHeight: '450px', objectFit: 'cover', objectPosition: 'top' }} />
+            <img src="/new_camp.jpeg" alt="Kampanya" style={{ width: '100%', display: 'block', maxHeight: '450px', objectFit: 'cover', objectPosition: 'top' }} />
             <div style={{ padding: '1rem 1.5rem 1.25rem', textAlign: 'center' }}>
               <a href={WP} target="_blank" rel="noopener noreferrer" onClick={() => setPopup(false)}
                 style={{ display: 'inline-block', background: G.grad, color: '#fff', padding: '11px 36px', borderRadius: '50px', fontWeight: 700, fontSize: '.95rem', textDecoration: 'none', transition: 'transform .2s,opacity .2s' }}
